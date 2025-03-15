@@ -14,7 +14,9 @@ import {
   CardContent,
   Fade,
   Alert,
-  Snackbar
+  Snackbar,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import {
   Mic as MicIcon,
@@ -28,6 +30,10 @@ import { getInterview, submitAnswer, getReport } from '../utils/api';
 const Interview = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [feedback, setFeedback] = useState(null);
@@ -154,24 +160,49 @@ const Interview = () => {
     const averageScore = scores.reduce((a, b) => a + b, 0) / scores.length;
     
     return (
-      <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
-          <Typography variant="h4" gutterBottom>
+      <Container 
+        maxWidth="md" 
+        sx={{ 
+          mt: { xs: 2, sm: 3, md: 4 },
+          px: { xs: 1, sm: 2, md: 3 }
+        }}
+      >
+        <Paper 
+          elevation={3} 
+          sx={{ 
+            p: { xs: 2, sm: 3, md: 4 }, 
+            textAlign: 'center',
+            background: 'rgba(255, 255, 255, 0.15)', 
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+            backgroundImage: 'none'
+          }}
+        >
+          <Typography variant={isMobile ? "h5" : "h4"} gutterBottom>
             Interview Complete!
           </Typography>
-          <Typography variant="h5" color="primary" gutterBottom>
+          <Typography variant={isMobile ? "h6" : "h5"} color="primary" gutterBottom>
             Overall Score: {averageScore.toFixed(1)}/10
           </Typography>
-          <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'center' }}>
+          <Box sx={{ 
+            mt: 3, 
+            display: 'flex', 
+            gap: { xs: 1, sm: 2 }, 
+            justifyContent: 'center',
+            flexDirection: isMobile ? 'column' : 'row'
+          }}>
             <Button
+              fullWidth={isMobile}
               variant="contained"
               startIcon={isGeneratingReport ? <CircularProgress size={20} color="inherit" /> : <DownloadIcon />}
               onClick={handleDownloadReport}
               disabled={isGeneratingReport}
             >
-              {isGeneratingReport ? 'Generating Report...' : 'Download Report'}
+              {isGeneratingReport ? 'Generating...' : 'Download Report'}
             </Button>
             <Button
+              fullWidth={isMobile}
               variant="outlined"
               startIcon={<RefreshIcon />}
               onClick={handleRetry}
@@ -182,14 +213,25 @@ const Interview = () => {
           </Box>
         </Paper>
 
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+        <Box sx={{ mt: { xs: 2, sm: 3, md: 4 } }}>
+          <Typography variant={isMobile ? "h6" : "h5"} gutterBottom sx={{ mb: { xs: 2, sm: 3 } }}>
             Interview Responses
           </Typography>
           {questions.map((question, index) => (
-            <Card key={index} elevation={3} sx={{ mb: 3 }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
+            <Card 
+              key={index} 
+              elevation={3} 
+              sx={{ 
+                mb: { xs: 2, sm: 3 },
+                background: 'rgba(255, 255, 255, 0.1)', 
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+                boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+                backgroundImage: 'none'
+              }}
+            >
+              <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom>
                   Question {index + 1}:
                 </Typography>
                 <Typography variant="body1" gutterBottom sx={{ mb: 2 }}>
@@ -202,9 +244,13 @@ const Interview = () => {
                 <Paper
                   variant="outlined"
                   sx={{
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     mb: 2,
-                    bgcolor: 'background.default'
+                    bgcolor: 'transparent',
+                    backdropFilter: 'blur(15px)',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    backgroundImage: 'none'
                   }}
                 >
                   <Typography variant="body1">
@@ -232,31 +278,50 @@ const Interview = () => {
   }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Box sx={{ mb: 4 }}>
+    <Container 
+      maxWidth="md" 
+      sx={{ 
+        mt: { xs: 2, sm: 3, md: 4 },
+        px: { xs: 1, sm: 2, md: 3 }
+      }}
+    >
+      <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
         <LinearProgress
           variant="determinate"
           value={(currentQuestionIndex / questions.length) * 100}
-          sx={{ height: 10, borderRadius: 5 }}
+          sx={{ height: { xs: 8, sm: 10 }, borderRadius: 5 }}
         />
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
           Question {currentQuestionIndex + 1} of {questions.length}
         </Typography>
       </Box>
 
-      <Card elevation={3}>
-        <CardContent>
-          <Typography variant="h5" gutterBottom>
+      <Card 
+        elevation={3} 
+        sx={{ 
+          background: 'rgba(255, 255, 255, 0.1)', 
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.18)',
+          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+          backgroundImage: 'none'
+        }}
+      >
+        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+          <Typography variant={isMobile ? "h6" : "h5"} gutterBottom>
             {questions[currentQuestionIndex]?.text}
           </Typography>
 
-          <Box sx={{ my: 3 }}>
+          <Box sx={{ my: { xs: 2, sm: 3 } }}>
             <Paper
               variant="outlined"
               sx={{
-                p: 2,
-                minHeight: 100,
-                bgcolor: 'background.default'
+                p: { xs: 1.5, sm: 2 },
+                minHeight: { xs: 80, sm: 100, md: 120 },
+                bgcolor: 'transparent',
+                backdropFilter: 'blur(15px)',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                backgroundImage: 'none'
               }}
             >
               <Typography>
@@ -265,9 +330,15 @@ const Interview = () => {
             </Paper>
           </Box>
 
-          <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+          <Box sx={{ 
+            display: 'flex', 
+            gap: { xs: 1, sm: 2 }, 
+            mb: 2,
+            flexDirection: isMobile ? 'column' : 'row'
+          }}>
             {!isRecording ? (
               <Button
+                fullWidth={isMobile}
                 variant="contained"
                 color="primary"
                 startIcon={<MicIcon />}
@@ -278,6 +349,7 @@ const Interview = () => {
               </Button>
             ) : (
               <Button
+                fullWidth={isMobile}
                 variant="contained"
                 color="secondary"
                 startIcon={<StopIcon />}
@@ -288,6 +360,7 @@ const Interview = () => {
             )}
             
             <Button
+              fullWidth={isMobile}
               variant="contained"
               disabled={!transcript.trim() || loading || isRecording}
               onClick={handleSubmitAnswer}
@@ -321,8 +394,13 @@ const Interview = () => {
                   </Typography>
                 </Alert>
                 {currentQuestionIndex === questions.length - 1 && (
-                  <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                  <Box sx={{ 
+                    mt: 2, 
+                    display: 'flex', 
+                    justifyContent: 'center' 
+                  }}>
                     <Button
+                      fullWidth={isMobile}
                       variant="contained"
                       color="primary"
                       onClick={() => setInterviewComplete(true)}
@@ -341,6 +419,10 @@ const Interview = () => {
         open={!!error}
         autoHideDuration={6000}
         onClose={() => setError('')}
+        anchorOrigin={{ 
+          vertical: 'bottom', 
+          horizontal: isMobile ? 'center' : 'right' 
+        }}
       >
         <Alert severity="error" onClose={() => setError('')}>
           {error}

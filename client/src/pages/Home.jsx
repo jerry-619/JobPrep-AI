@@ -14,7 +14,9 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel
+  InputLabel,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import { startInterview } from '../utils/api';
 
@@ -25,6 +27,8 @@ const Home = () => {
   const [error, setError] = useState('');
   const [numQuestions, setNumQuestions] = useState(5);
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleStartInterview = async () => {
     if (!role.trim()) {
@@ -70,13 +74,26 @@ const Home = () => {
         }}
       >
         <Fade in timeout={1000}>
-          <Typography variant="h1" gutterBottom>
+          <Typography 
+            variant="h1" 
+            gutterBottom
+            sx={{
+              fontSize: { xs: '3rem', sm: 'h1.fontSize' }
+            }}
+          >
             JobPrep AI
           </Typography>
         </Fade>
 
         <Fade in timeout={1500}>
-          <Typography variant="h5" color="text.secondary" gutterBottom>
+          <Typography 
+            variant="h5" 
+            color="text.secondary" 
+            gutterBottom
+            sx={{
+              fontSize: { xs: '1.5rem', sm: 'h5.fontSize' }
+            }}
+          >
             Your AI-Powered Job Prep Partner
           </Typography>
         </Fade>
@@ -85,12 +102,17 @@ const Home = () => {
           <Paper
             elevation={3}
             sx={{
-              p: 4,
+              p: { xs: 3, sm: 4 },
               width: '100%',
               maxWidth: 500,
               display: 'flex',
               flexDirection: 'column',
-              gap: 3
+              gap: 3,
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+              boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2)',
+              backgroundImage: 'none'
             }}
           >
             <TextField
@@ -148,7 +170,7 @@ const Home = () => {
 
         <Fade in timeout={2500}>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-            Powered by advanced AI to help you ace your next interview
+            Made with ❤️ by Fardeen Beigh
           </Typography>
         </Fade>
       </Box>

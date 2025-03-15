@@ -94,7 +94,7 @@ export default function Auth() {
     <Container component="main" maxWidth="xs">
       <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
         <Typography component="h1" variant="h5" align="center" gutterBottom>
-          Welcome to Interview AI
+          Welcome to JobPrep AI
         </Typography>
 
         <Tabs value={tab} onChange={handleTabChange} centered>
